@@ -1,7 +1,10 @@
 import { Request, Response } from "express";
 import { createUsersService } from "../services/createUsers.service";
-import { TUserRequest, TUserResponse } from "../interfaces/users.interfaces";
+import { TUserRequest, TUserResponse, TUserUpdate } from "../interfaces/users.interfaces";
 import { listUsersService } from "../services/listUsers.service";
+import { updateUserService } from "../services/updateUser.service";
+import { softDeleteUserService } from "../services/softDeleteUser.service";
+import { recoverUserService } from "../services/recoverUser.service";
 
 const createUsersController = async (req:Request, res:Response):Promise<Response> =>{
     const userData:TUserRequest = req.body
@@ -19,6 +22,31 @@ const listUsersController =async (req:Request, res:Response):Promise<Response> =
 
 }
 
+const updateUserController = async (req:Request, res:Response):Promise<Response> =>{
+    const userId:number = Number(req.params.id)
+    const userData:TUserUpdate = req.body
+
+    const updatedUser = await updateUserService(userId, userData)
+
+    return res.json(updatedUser)
+}
+
+const softDeleteUserController =async (req:Request, res:Response) => {
+    const userId:number = Number(req.params.id)
+
+    await softDeleteUserService(userId)
+
+    return res.status(204).send()
+}
+
+const recoverUserController =async (req:Request, res:Response):Promise<Response> => {
+    const userId:number = Number(req.params.id)
+
+    const recoveredUser = await recoverUserService(userId)
+
+    return res.json(recoveredUser)
+
+}
 
 
-export { createUsersController, listUsersController }
+export { createUsersController, listUsersController, updateUserController, softDeleteUserController, recoverUserController }

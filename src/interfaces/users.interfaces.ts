@@ -1,14 +1,12 @@
-interface IUser {
-    id:number,
-    name:string,
-    email:string,
-    password:string,
-    admin:boolean,
-    active:boolean
-}
+import { z } from "zod" 
+import { userRequestSchema, userResponseSchema, userSchema, userUpdateSchema } from "../schemas/users.schema"
 
-type TUserRequest = Omit<IUser, 'id'>
+type TUser = z.infer<typeof userSchema>
 
-type TUserResponse = Omit<IUser, 'password'>
+type TUserRequest = z.infer<typeof userRequestSchema>
 
-export { IUser, TUserRequest, TUserResponse }
+type TUserResponse = z.infer<typeof userResponseSchema>
+
+type TUserUpdate = z.infer<typeof userUpdateSchema>
+
+export { TUser, TUserRequest, TUserResponse, TUserUpdate }

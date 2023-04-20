@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { QueryConfig, QueryResult } from "pg";
 import { client } from "../database";
+import { AppError } from "../error";
 
 const ensureEmailNotExistsMiddleware =async (req:Request, res:Response, next:NextFunction):Promise<Response | void> => {
     const { email } = req.body
@@ -21,9 +22,7 @@ const ensureEmailNotExistsMiddleware =async (req:Request, res:Response, next:Nex
     const queryResult:QueryResult = await client.query(queryConfig)
 
     if(queryResult.rowCount > 0){
-        return res.status(409).json({
-            message: "E-mail already registered"
-        })
+       throw new AppError ('E-mail already registered', 409)
     }
 
     next()
