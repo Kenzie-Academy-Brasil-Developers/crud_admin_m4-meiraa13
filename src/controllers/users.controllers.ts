@@ -5,6 +5,7 @@ import { listUsersService } from "../services/listUsers.service";
 import { updateUserService } from "../services/updateUser.service";
 import { softDeleteUserService } from "../services/softDeleteUser.service";
 import { recoverUserService } from "../services/recoverUser.service";
+import { listUserByProfileService } from "../services/listUserByProfile.service";
 
 const createUsersController = async (req:Request, res:Response):Promise<Response> =>{
     const userData:TUserRequest = req.body
@@ -48,5 +49,14 @@ const recoverUserController =async (req:Request, res:Response):Promise<Response>
 
 }
 
+const listUserByProfile = async(req:Request, res:Response) =>{
+    const id = res.locals.token.id
 
-export { createUsersController, listUsersController, updateUserController, softDeleteUserController, recoverUserController }
+    const user = await listUserByProfileService(id)
+
+    return res.json(user)
+}
+
+
+
+export { createUsersController, listUsersController, updateUserController, softDeleteUserController, recoverUserController, listUserByProfile }

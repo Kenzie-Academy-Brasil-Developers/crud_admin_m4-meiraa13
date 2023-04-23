@@ -3,8 +3,11 @@ import { TUserRequest, TUserResponse } from "../interfaces/users.interfaces"
 import { QueryResult } from "pg"
 import { client } from "../database"
 import { userResponseSchema } from "../schemas/users.schema"
+import * as bcrypt from "bcryptjs"
 
 const createUsersService = async (userData:TUserRequest):Promise<TUserResponse> =>{
+
+    userData.password = await bcrypt.hash(userData.password,10)
 
     const queryString: string = format(
         `
@@ -24,7 +27,6 @@ const createUsersService = async (userData:TUserRequest):Promise<TUserResponse> 
     const newUser = userResponseSchema.parse(queryResult.rows[0])
 
     return newUser
-
 }
 
 export { createUsersService }
